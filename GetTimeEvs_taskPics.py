@@ -2,15 +2,15 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Oct  6 16:33:52 2017
-DESCRIPTION HERE
-This script takes the csv files in the behav folder for each participant 
-specified in brackets, and reads through, and produces output text files
-containing the information we need for FEAT
 
-IMPORTANT: change the directory depending on what text files I am preparing
-change "CHANGETHIS"
+This script takes the csv files in the behavioural folder for each participant 
+in the main directory, and reads through, and produces output text files
+containing the information we need for the EVs in FEAT
 
-Improve: add a few lines that create the directory for a new version if this doesn't exist
+IMPORTANT: the script must live in the same directory as the paryicipants folders 
+(if not, glob.glob will not find anything with that structure specified in line 31)
+
+To improve: add a few lines that create the directory for a new version if this doesn't exist
 
 @author: ll1327
 """
@@ -20,18 +20,19 @@ import os
 import glob
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# In my experiment I had two main models: one for when participants saw the cue pictures, one for the following semantic decision task
 modelType = input ('Is this cue or task?')
+
+# My fMRI analyses have been numbered 1.0, 1.1, 1.2, 2.0, 2.1 (etc). This allows to grab exactly the folder that I need
 version = input ('What version are you running?')
+#-------------------------------------------------
 
-# List of participants on which we want to perform the analyses
-
-par = glob.glob('[0-9][0-9]_R[0-9][0-9][0-9][0-9]')       # grabs all participants in the folder 
+# glob grabs all participants in the folder 
+par = glob.glob('[0-9][0-9]_R[0-9][0-9][0-9][0-9]')       
  
-
+# for each item in the list of participant, list the path to the folder that contains the behavioural data
 for i in range(len(par)):
     behpath = os.listdir('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Behav' %par[i])
-#    evpath = os.listdir('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Evs/task/%s' % par[i], version)
-    
     
     for k in range(len(behpath)):
         filename = '/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Behav/%s' %(par[i], behpath[k])
