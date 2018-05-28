@@ -5,10 +5,19 @@ Created on Fri Oct  6 16:33:52 2017
 
 This script takes the csv files in the behavioural folder for each participant 
 in the main directory, and reads through, and produces output text files
-containing the information we need for the EVs in FEAT
+containing the information we need for the EVs in FEAT - produces CONSTANT EPOCH
 
-IMPORTANT: the script must live in the same directory as the paryicipants folders 
-(if not, glob.glob will not find anything with that structure specified in line 31)
+First column is the start of the decision (when the words appear), second column 
+is the duration of the decision (4 sec), third column is a weight. I gave the weight 1 to everything, regardless of accuracy 
+
+IMPORTANT: 
+1.the script must live in the same directory as the paryicipants folders 
+(if not, glob.glob will not find anything with that structure specified in "par")
+2. Uncomment the lines about the cue model if wanting to run on cue model
+3. The script works only on a macrostructure of this kind: 
+   1. main directory contains a folder for each participant
+   2. each participant's folder has the following name [0-9][0-9]_R[0-9][0-9][0-9][0-9] (e.g. 20_R2437)
+   3. update "par" and "behpath" if used outside of P1334
 
 To improve: add a few lines that create the directory for a new version if this doesn't exist
 
@@ -38,31 +47,32 @@ for i in range(len(par)):
         filename = '/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Behav/%s' %(par[i], behpath[k])
         run = filename.split('/')[-1].split('_')[2]
         
-        # open a csv file that has the name that we inputted
-        trials = []
-        with open(filename) as csvfile:
-            reader = csv.DictReader(csvfile)    # reads through
-            #print(reader.fieldnames)            
+        
+        trials = []                             # creates an empty list that will be filled with rows from the csv file
+        with open(filename) as csvfile:         # open a csv file that has the name that we inputted
+            reader = csv.DictReader(csvfile)    # reads through - temporary repository of the content of the csv
+            #print(reader.fieldnames)           # for sanity check that the reader is doing its job        
+            
             for row in reader:
                 #print(row)
-                trials.append(row)
+                trials.append(row)              # each item in "reader" will be added to the list "trials"
 
             
-        # opens the following text files that will be used to store the even timing
+        # opens the following text files (for writing) they will be used to store the event timing
         fout1 = open('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Evs/%s/%s/Run%s_combined_task.txt' %(par[i], modelType, version, run),'w')
         fout2 = open('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Evs/%s/%s/Run%s_scrambled_task.txt' %(par[i],modelType, version, run),'w')        
         fout3 = open('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Evs/%s/%s/Run%s_singleE_task.txt' %(par[i], modelType, version,run),'w')
         fout4 = open('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Evs/%s/%s/Run%s_singleL_task.txt' %(par[i], modelType, version,run),'w')
         fout5 = open('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Evs/%s/%s/Run%s_nonSem_task.txt' %(par[i],modelType, version, run),'w')
 
-#        fout6 = open('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Evs/%s/%s/Run%s_combined_task.txt' %(par[i], modelType, version, run),'w')
-#        fout7 = open('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Evs/%s/%s/Run%s_scrambled_task.txt' %(par[i],modelType, version, run),'w')        
-#        fout8 = open('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Evs/%s/%s/Run%s_singleE_task.txt' %(par[i], modelType, version,run),'w')
-#        fout9 = open('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Evs/%s/%s/Run%s_singleL_task.txt' %(par[i], modelType, version,run),'w')
-#        fout10 = open('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Evs/%s/%s/Run%s_nonSem_task.txt' %(par[i],modelType, version, run),'w')        
+#        fout6 = open('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Evs/%s/%s/Run%s_combined_cue.txt' %(par[i], modelType, version, run),'w')
+#        fout7 = open('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Evs/%s/%s/Run%s_scrambled_cue.txt' %(par[i],modelType, version, run),'w')        
+#        fout8 = open('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Evs/%s/%s/Run%s_singleE_cue.txt' %(par[i], modelType, version,run),'w')
+#        fout9 = open('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Evs/%s/%s/Run%s_singleL_cue.txt' %(par[i], modelType, version,run),'w')
+#        fout10 = open('/scratch/groups/Projects/P1334/fMRI_analyses/1.firstLevel/%s/Evs/%s/%s/Run%s_nonSem_cue.txt' %(par[i],modelType, version, run),'w')        
 
         
-        # now loops through the list of dictionaries 'trials' and stores the info in txt files
+        # now loops through the list of dictionaries 'trials' and stores the relevant info in the txt files
         for entry in trials:
             
             if entry['Cue Condition'] == 'combined':
