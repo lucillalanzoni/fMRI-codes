@@ -4,7 +4,8 @@
 Created on Fri May 25 12:34:20 2018
 @author: ll1327
 
-Want a script that takes the content of the text files outputted after feat query and copies them in csv file
+This script takes the content of the text files produced by feat query and copies them in csv file
+You have the option to specify which cope you want to do it for and which cluster
 
 """
 
@@ -40,13 +41,3 @@ with open("%s/featQ_cope%s_clust%s.txt" %(outdir, cope, cluster), 'w') as outfil
                  outfile.write(line)
                  print(line)
     
-          
-          
-
-   
-    
-    
-    
-
-    
-  
