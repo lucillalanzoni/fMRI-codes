@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu May 17 16:56:19 2018
-
 @author: ll1327
+
+This grabs all the fsf files in the directory specified in fsfdir and sends them to the clusterFeat
 """
 
 import os
@@ -18,4 +19,6 @@ fsfdir = "%s/fsf/task/2.2.1" %(studydir)
 
 for i in os.listdir(fsfdir):
   print(i)
+  
+  # Execute the command (a string) in a subshell
   os.system("clusterFeat %s/%s"%(fsfdir,i))
