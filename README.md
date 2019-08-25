@@ -1,3 +1,3 @@
 # fMRI-codes
 
-This repository contains Python script I wrote to automate analyses of fMRI data. 
+This repository contains Python scripts I wrote to automate analyses of fMRI data. 
